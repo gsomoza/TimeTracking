@@ -1,13 +1,14 @@
 # Time Tracker
 Welcome to the source-code for a simple time-tracking app. It uses some of the latest PHP stuff you can find (at the time of writing) - so browse around and I hope you enjoy!
 
-Some of the components:
+Some of the components / features:
 * Composer
 * Zend Framework 2
 * Doctrine
 * Apigility
+* Ember.js
+* OAuth2 Password authentication
 * Boostrap
-* Ember.JS
 * Precompiles & minifies Ember templates and caches them to disk.
 
 ### INSTALLATION NOTES
