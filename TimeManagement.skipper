@@ -1,0 +1,138 @@
+<?xml version="1.0"?>
+<skipper version="3.0.0.1104" name="TimeManagement" mvc="Zend Framework" orm="Doctrine2" uuid="f66021d9-b24f-434a-874e-0cd86badfcf7">
+  <module name="Oauth" import-format="Doctrine2Xml" import-path="module/Db/config/xml" uuid="66ab8eb5-2fd4-48f4-8b44-3c49221bd862">
+    <entity name="User" uuid="c162e3bc-2ead-46c4-9005-590f7580dea3">
+      <field name="username" type="string" size="255" default="NULL" primary="true" uuid="70e12636-7fc5-4563-bf7f-1b2d9cb7ac1c"/>
+      <field name="password" type="string" size="2000" default="NULL" uuid="a8255e7a-ebbd-45cc-910d-d61e3860ae8c"/>
+      <field name="first_name" type="string" size="255" default="NULL" uuid="f68dd6f6-5ef0-4207-8da8-9ad243d222da"/>
+      <field name="last_name" type="string" size="255" default="NULL" uuid="9fd3a09b-4e1f-44d8-a341-b1b3ddc76765"/>
+      <field name="day_length" type="integer" default="NULL" uuid="a8cd8fe0-d7c8-4503-8854-346ecc63adcf"/>
+      <orm-attributes>
+        <attribute name="table">oauth_users</attribute>
+      </orm-attributes>
+    </entity>
+    <entity name="AccessToken" uuid="05196fbe-b2ae-4e35-bdde-1918fa99bbbb">
+      <field name="access_token" type="string" size="40" required="true" primary="true" uuid="475287e2-ba85-4169-b671-096ff03d7cbd"/>
+      <field name="expires" type="datetime" default="CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" required="true" uuid="ac094f09-0e17-497c-97b1-87122e2e5a26"/>
+      <field name="scope" type="string" size="2000" default="NULL" uuid="fb8cafea-a0a3-41f9-9c8a-60c49f6b49cf"/>
+      <field name="user_id" type="string" size="255" uuid="a675b9b2-fd14-4c0f-b740-479938b5cb50"/>
+      <field name="client_id" type="string" size="80" uuid="54e7dd0f-f46b-4fc9-a299-b8ae93219911"/>
+      <orm-attributes>
+        <attribute name="table">oauth_access_tokens</attribute>
+      </orm-attributes>
+    </entity>
+    <association from="AccessToken" to="User" caption="User AccessTokens" owner-alias="accessTokens" inverse-alias="user" uuid="8114634c-7ee7-4cb3-8e91-dc4b5a96f361">
+      <association-field from="user_id" to="username"/>
+    </association>
+    <association from="AccessToken" to="Client" caption="Client AccessTokens" owner-alias="accessTokens" inverse-alias="client" uuid="c46e5046-2490-438c-ae93-e2e568b1da9d">
+      <association-field from="client_id" to="client_id"/>
+    </association>
+    <entity name="AuthorizationCode" uuid="51dfc710-9181-4397-aaaa-3af6b076a644">
+      <field name="authorization_code" type="string" size="40" required="true" primary="true" uuid="05d26988-d159-4801-a0c4-48fe5b113ba9"/>
+      <field name="redirect_uri" type="string" size="2000" default="NULL" uuid="490585bd-f21b-471a-a0a5-190b1fd2a039"/>
+      <field name="expire" type="datetime" default="CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" required="true" uuid="395aa11f-4df9-4add-b2be-9004dc18d7bb"/>
+      <field name="scope" type="string" size="2000" uuid="bfb5d52f-3c00-46d4-a0a1-76335dbc6f98"/>
+      <field name="id_token" type="string" size="2000" uuid="841c68ea-ef01-48a6-a686-3b49cb8574f3"/>
+      <field name="client_client_id" type="string" size="80" uuid="a4e47b79-f691-4038-85dd-1cfa0d6d453b"/>
+      <field name="user_id" type="string" size="255" uuid="cf06b8b6-a9f4-422c-b1d8-459f7ae2ffd4"/>
+      <orm-attributes>
+        <attribute name="table">oauth_authorization_codes</attribute>
+      </orm-attributes>
+    </entity>
+    <association from="AuthorizationCode" to="Client" caption="Client AuthorizationCodes" owner-alias="authorizationCodes" inverse-alias="client" uuid="656bdc38-989a-47ee-8469-d2cb9d7fb144">
+      <association-field from="client_client_id" to="client_id"/>
+    </association>
+    <association from="AuthorizationCode" to="User" caption="User AuthorizationCodes" owner-alias="authorizationCodes" inverse-alias="user" uuid="c1963fc8-0a45-4839-b75f-80c30e795424">
+      <association-field from="user_id" to="username"/>
+    </association>
+    <entity name="Client" uuid="7f581e23-ce3c-4f25-9096-d02ca4b287f0">
+      <field name="client_id" type="string" size="80" required="true" primary="true" uuid="7e8e84ec-47aa-499d-827f-ad4b0178abac"/>
+      <field name="client_secret" type="string" size="80" required="true" uuid="2843359f-c238-4ab1-8cff-60554c953203"/>
+      <field name="redirect_uri" type="string" size="2000" required="true" uuid="9a39e260-6cd4-4576-be0a-e05ac5faf0ed"/>
+      <field name="grant_types" type="string" size="80" default="NULL" uuid="05af5882-ca3a-4289-9e38-2381d6d1c8fa"/>
+      <field name="scope" type="string" size="2000" default="NULL" uuid="b2414880-6299-48b4-9aef-168428480e86"/>
+      <orm-attributes>
+        <attribute name="table">oauth_clients</attribute>
+      </orm-attributes>
+    </entity>
+    <entity name="Jwt" uuid="ac4cd282-975a-435a-9b7d-996324b6aedb">
+      <field name="client_id" type="string" size="80" required="true" primary="true" uuid="49ab617d-f237-4f3b-ab44-4cc391b3760d"/>
+      <field name="subject" type="string" size="80" default="NULL" uuid="0f2777aa-8cfe-4244-bf6b-bec26c1a85c2"/>
+      <field name="public_key" type="string" size="2000" default="NULL" uuid="5519055c-4997-4d57-bf10-01d1a79fda0e"/>
+      <orm-attributes>
+        <attribute name="table">oauth_jwt</attribute>
+      </orm-attributes>
+    </entity>
+    <entity name="RefreshToken" uuid="c62c192a-fb45-49bf-a283-42f68067af7a">
+      <field name="refresh_token" type="string" size="40" required="true" primary="true" uuid="576f9a88-f9fe-4b1c-9449-5c264664d9e2"/>
+      <field name="expires" type="datetime" default="CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" required="true" uuid="19321058-37f6-41c0-a1da-fa1dad23a8fd"/>
+      <field name="scope" type="string" size="2000" default="NULL" uuid="bf4848c9-402c-4e6e-9090-2141684af6bb"/>
+      <field name="user_id" type="string" size="255" uuid="3c3a4db6-1614-4b71-be26-e58fa7977e00"/>
+      <field name="client_id" type="string" size="80" uuid="8dc84972-a4cd-49da-a32f-f25f48449974"/>
+      <orm-attributes>
+        <attribute name="table">oauth_refresh_tokens</attribute>
+      </orm-attributes>
+    </entity>
+    <association from="RefreshToken" to="User" caption="User RefreshTokens" owner-alias="refreshTokens" inverse-alias="user" uuid="45d875d5-a50c-4cce-a080-653c676b1c9c">
+      <association-field from="user_id" to="username"/>
+    </association>
+    <association from="RefreshToken" to="Client" caption="Client RefreshTokens" owner-alias="refreshTokens" inverse-alias="client" uuid="2d9add5a-6f3c-44ec-aaa0-05a7dcfbef58">
+      <association-field from="client_id" to="client_id"/>
+    </association>
+    <entity name="Scope" uuid="cd26a848-f4f2-4c6c-8ae0-ad00c9015846">
+      <field name="type" type="string" size="255" default="'supported'" required="true" uuid="63c7b67e-1a12-41b1-8b8c-ff35ea501425"/>
+      <field name="scope" type="string" size="2000" default="NULL" uuid="dafd3d08-6fe5-41d2-9c91-40957973bc9d"/>
+      <field name="is_default" type="smallint" size="6" default="NULL" uuid="75d6c8d3-e6c2-4525-b905-c12691b02b62"/>
+      <field name="client_id" type="string" size="80" uuid="caf40a50-7c00-4108-b2ba-7f25cc40f4fe"/>
+      <field name="id" required="true" unique="true" primary="true" auto-increment="true" uuid="d61efc2f-bb51-4ed1-9289-331b6cea3b6c"/>
+      <orm-attributes>
+        <attribute name="table">oauth_scopes</attribute>
+      </orm-attributes>
+    </entity>
+    <association from="Scope" to="Client" caption="Client Scopes" owner-alias="scopes" inverse-alias="client" uuid="021fefbe-b34d-4d6a-b815-713894d25df8">
+      <association-field from="client_id" to="client_id"/>
+    </association>
+    <orm-attributes>
+      <attribute name="namespace">Db\Entity</attribute>
+    </orm-attributes>
+  </module>
+  <module name="Application" import-format="Doctrine2Xml" import-path="module/Db/config/xml" uuid="71f859c2-e3a1-4156-b86f-38bf35edad42">
+    <entity name="Worklog" uuid="7fb8b565-061d-4dbb-bca1-e5f59ea01500">
+      <field name="id" type="integer" required="true" unique="true" primary="true" auto-increment="true" uuid="d1b05ae4-4fb3-4e32-838c-00709aeef65a"/>
+      <field name="duration" type="float" required="true" uuid="17d11f60-a1a4-42db-ad44-831bdbec0896"/>
+      <field name="date" type="date" required="true" uuid="538b69cc-762d-49cb-a534-2c9c28c9308e"/>
+      <field name="notes" type="text" uuid="4d0deac3-8020-4e4d-980e-c2d17cbc93c8"/>
+      <field name="user_id" type="string" size="255" uuid="d10a0af1-be5c-49e1-9ccc-40da86b1f9d7"/>
+      <orm-attributes>
+        <attribute name="table">worklogs</attribute>
+      </orm-attributes>
+    </entity>
+    <association from="Worklog" to="User" caption="User Worklog" owner-alias="worklog" inverse-alias="user" uuid="ee008393-ddd4-4fc3-947e-2532e60267b4">
+      <association-field from="user_id" to="username"/>
+    </association>
+    <orm-attributes>
+      <attribute name="namespace">Db\Entity</attribute>
+    </orm-attributes>
+  </module>
+  <visual-data>
+    <association uuid="021fefbe-b34d-4d6a-b815-713894d25df8" caption1-position-x="0" caption1-position-y="0" center-position-x="0" center-position-y="0" color="4288059030"/>
+    <entity uuid="05196fbe-b2ae-4e35-bdde-1918fa99bbbb" bg-color="4294967295" hdr-color="4292006610" position-x="51" position-y="116" size-x="0" size-x2="131" size-y="0" size-y2="87"/>
+    <association uuid="2d9add5a-6f3c-44ec-aaa0-05a7dcfbef58" caption1-position-x="0" caption1-position-y="0" center-position-x="0" center-position-y="0" color="4288059030"/>
+    <association uuid="45d875d5-a50c-4cce-a080-653c676b1c9c" caption1-position-x="0" caption1-position-y="0" center-position-x="0" center-position-y="0" color="4288059030"/>
+    <entity uuid="51dfc710-9181-4397-aaaa-3af6b076a644" bg-color="4294967295" hdr-color="4292006610" position-x="551" position-y="161" size-x="0" size-x2="150" size-y="0" size-y2="115"/>
+    <association uuid="656bdc38-989a-47ee-8469-d2cb9d7fb144" caption1-position-x="96" caption1-position-y="3" center-position-x="0" center-position-y="0" color="4288059030"/>
+    <module uuid="66ab8eb5-2fd4-48f4-8b44-3c49221bd862" bg-color="4293391869" position-x="61" position-y="72" size-x="11" size-x2="786" size-y="22" size-y2="619"/>
+    <module uuid="71f859c2-e3a1-4156-b86f-38bf35edad42" bg-color="4294900968" position-x="885" position-y="53" size-x="0" size-x2="201" size-y="0" size-y2="114"/>
+    <entity uuid="7f581e23-ce3c-4f25-9096-d02ca4b287f0" bg-color="4294967295" hdr-color="4292006610" position-x="186" position-y="322" size-x="0" size-x2="129" size-y="0" size-y2="87"/>
+    <entity uuid="7fb8b565-061d-4dbb-bca1-e5f59ea01500" bg-color="4294967295" hdr-color="4292006610" position-x="70" position-y="18" size-x="0" size-x2="86" size-y="0" size-y2="73"/>
+    <association uuid="8114634c-7ee7-4cb3-8e91-dc4b5a96f361" caption1-position-x="0" caption1-position-y="0" center-position-x="0" center-position-y="0" color="4288059030"/>
+    <entity uuid="ac4cd282-975a-435a-9b7d-996324b6aedb" bg-color="4294967295" hdr-color="4292006610" position-x="619" position-y="389" size-x="0" size-x2="128" size-y="0" size-y2="59"/>
+    <entity uuid="c162e3bc-2ead-46c4-9005-590f7580dea3" bg-color="4294967295" hdr-color="4292006610" position-x="368" position-y="326" size-x="0" size-x2="123" size-y="0" size-y2="73"/>
+    <association uuid="c1963fc8-0a45-4839-b75f-80c30e795424" caption1-position-x="0" caption1-position-y="0" center-position-x="0" center-position-y="0" color="4288059030"/>
+    <association uuid="c46e5046-2490-438c-ae93-e2e568b1da9d" caption1-position-x="2" caption1-position-y="-3" center-position-x="0" center-position-y="-3" color="4288059030"/>
+    <entity uuid="c62c192a-fb45-49bf-a283-42f68067af7a" bg-color="4294967295" hdr-color="4292006610" position-x="70" position-y="493" size-x="0" size-x2="131" size-y="0" size-y2="87"/>
+    <entity uuid="cd26a848-f4f2-4c6c-8ae0-ad00c9015846" bg-color="4294967295" hdr-color="4292006610" position-x="387" position-y="510" size-x="0" size-x2="118" size-y="0" size-y2="59"/>
+    <association uuid="ee008393-ddd4-4fc3-947e-2532e60267b4" caption1-position-x="0" caption1-position-y="0" center-position-x="0" center-position-y="0" color="4288059030"/>
+    <project uuid="f66021d9-b24f-434a-874e-0cd86badfcf7" size-x="0" size-x2="1174" size-y="0" size-y2="751"/>
+  </visual-data>
+</skipper>

@@ -1,0 +1,48 @@
+#!/bin/bash
+cd ${0%/*}/..
+
+if [[ ! -f "config/autoload/local.php" ]]
+then
+    echo "---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~--"
+    echo "The application needs local configuration."
+    echo "  1. cd config/autoload"
+    echo "  2. cp local.php.dist local.php"
+    echo "  3. Edit local.php with DB server address and credentials"
+    echo "  4. Run rebuild script again: ./bin/rebuild"
+    echo "---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~--"
+    exit 1;
+fi
+
+echo "---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~--"
+read -p " About to rebuild API module (DbApi). Continue? [Y/n]" -n 1 -r
+echo
+
+if [[ $REPLY = ^[Y]$ ]]
+then
+    echo "---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~--"
+    echo "  Preparing temporary application config..."
+    echo "---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~--"
+    #sed -n '/DbApi/!p' config/application.config.php > temp;
+    #mv temp config/application.config.php;
+    echo "Done!"
+    echo
+
+    echo "---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~--"
+    echo "  Generating api module ..."
+    echo "---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~--"
+    rm -rf module/DbApi
+    ./app build api module
+    echo "Done!"
+    echo
+
+    echo "---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~--"
+    echo "  Generating API resources and routes..."
+    echo "---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~--"
+    ./app build api
+    echo "Done! The API has been rebuilt in module/DbApi"
+    echo
+    echo
+
+else
+  echo "Aborting..."
+fi

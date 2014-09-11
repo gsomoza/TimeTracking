@@ -1,0 +1,37 @@
+<?php echo $this->doctype(); ?>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+<?php
+    echo $this->headTitle('Time Tracker');
+    echo $this->headMeta()->appendName('viewport', 'width=device-width, initial-scale=1.0');
+    echo $this->headLink(array('rel' => 'icon', 'type' => 'image/png', 'href' => $this->basePath('/img/favicon.png')))
+        ->prependStylesheet($this->basePath('/css/print.css'), 'print', false, array('id' => 'print-styles'))
+        ->prependStylesheet($this->basePath('/css/styles.css'));
+
+    echo $this->headScript();
+?>
+
+    </head>
+    <body>
+        <?php echo $this->inlineScript()
+            ->prependFile($this->basePath('/tests/runner.js'))
+            ->prependFile($this->basePath('/js/timetracker.js'))
+            ->prependFile($this->basePath('/js/handlebars.compiled.js'))
+            /*->prependFile($this->basePath('/js/lib.js'))*/
+            ->prependFile($this->basePath('/js/libs/bs-ember.js'))
+            ->prependFile($this->basePath('/js/libs/bs-core.min.js'))
+            ->prependFile($this->basePath('/js/libs/ember-forms.js'))
+            ->prependFile($this->basePath('/js/libs/ember-easyForm-1.0.0.b1.min.js'))
+            ->prependFile($this->basePath('/js/libs/ember-simple-auth-oauth2-0.6.4.js'))
+            ->prependFile($this->basePath('/js/libs/ember-simple-auth-0.6.4.js'))
+            ->prependFile($this->basePath('/js/libs/ember-data-1.0.0.beta9.js'))
+            ->prependFile($this->basePath('/js/libs/ember-1.7.0.js'))
+            ->prependFile($this->basePath('/js/libs/handlebars-1.1.2.js'))
+            ->prependFile($this->basePath('/js/libs/moment.min.js'))
+            ->prependFile($this->basePath('/js/libs/bootstrap.min.js'))
+            ->prependFile($this->basePath('/zf-apigility/js/jquery.min.js'))
+       ?>
+    </body>
+</html>

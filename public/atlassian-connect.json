@@ -1,0 +1,33 @@
+{
+    "name": "Hello World",
+    "version": "1.0.0",
+    "apiVersion": 1,
+    "description": "Atlassian Connect add-on",
+    "key": "com.example.johny",
+    "baseUrl": "http://timetracker.dev",
+    "enableLicensing": false,
+    "links": {
+        "documentation": "https://addon.domain.com/docs",
+        "self": "http://timetracker.dev/atlassian-connect.json"
+    },
+    "vendor": {
+        "name": "Example, Inc.",
+        "url": "http://example.com"
+    },
+    "authentication": {
+        "type": "none"
+    },
+    "scopes": [ "READ" ],
+    "modules": {
+        "generalPages": [
+            {
+                "url": "/index.php",
+                "key": "hello-world",
+                "location": "system.top.navigation.bar",
+                "name": {
+                    "value": "Greeting"
+                }
+            }
+        ]
+    }
+}

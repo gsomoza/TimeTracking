@@ -1,0 +1,52 @@
+{{#if session.attemptedTransition}}
+    {{bs-alert type='alert-danger' heading='Unauthorized' message='Please login to continue.'}}
+{{/if}}
+<div class="page-header">
+	<h1>Login</h1>
+</div>
+
+{{#unless session.isAuthenticated}}
+    <p>Please enter your username and password in the form below to login.</p>
+
+    <div class="row">
+        <div class="col-md-5 col-sm-6 col-lg-4">
+            <form id="loginForm" role="form" {{action 'authenticate' on='submit'}}>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="identification">Username</label>
+                        {{input type="text" class="form-control" id="identification" value=identification}}
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        {{input type="password" class="form-control" id="password" value=password}}
+                    </div>
+                </div>
+                <div class="panel-footer clearfix">
+                    <button id="loginButton" type="submit"
+                            {{bind-attr class=":btn :btn-lg :btn-info isWaiting:disabled"}}>
+                        {{#if isWaiting}}
+                            Logging in...
+                        {{else}}
+                            Login
+                        {{/if}}
+                    </button>
+                    <div class="pull-right">
+                        <span>No account yet?&nbsp;&nbsp;</span>
+                        <a id="registerButton" class="btn btn-warning" {{action register}}>Register</a>
+                    </div>
+                </div>
+            </div>
+            <div id="loginErrors">
+                {{#if errorMessage}}
+                    {{bs-alert type='alert-danger' message=errorMessage.message}}
+                {{/if}}
+            </div>
+            </form>
+        </div>
+    </div>
+{{else}}
+    You're already logged in! {{#link-to 'worklogs'}}Click here{{/link-to}} to view your worklogs.
+{{/unless}}
+
+

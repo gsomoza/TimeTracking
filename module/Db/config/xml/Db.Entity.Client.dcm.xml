@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xsi="http://www.w3.org/2001/XMLSchema-instance" schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Db\Entity\Client" table="oauth_clients">
+    <id name="client_id" type="string" length="80"/>
+    <field name="client_secret" type="string" length="80" nullable="false"/>
+    <field name="redirect_uri" type="string" length="2000" nullable="false"/>
+    <field name="grant_types" type="string" length="80" nullable="true"/>
+    <field name="scope" type="string" length="2000" nullable="true"/>
+    <one-to-many field="accessTokens" target-entity="Db\Entity\AccessToken" mapped-by="client"/>
+    <one-to-many field="authorizationCodes" target-entity="Db\Entity\AuthorizationCode" mapped-by="client"/>
+    <one-to-many field="refreshTokens" target-entity="Db\Entity\RefreshToken" mapped-by="client"/>
+    <one-to-many field="scopes" target-entity="Db\Entity\Scope" mapped-by="client"/>
+  </entity>
+</doctrine-mapping>

@@ -1,0 +1,5 @@
+<script>
+	var hash = window.location.hash;
+	window.opener.App.oauth.trigger('redirect', hash);
+	window.close();
+</script>

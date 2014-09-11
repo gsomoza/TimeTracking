@@ -1,0 +1,139 @@
+<div class="page-header">
+    <h1>Worklogs</h1>
+    <p class="lead">"The only reason for time is so that everything doesn't happen at once." - Albert Einstein</p>
+</div>
+<section id="dateRangeContainer" class="panel panel-default worklog worklog-index">
+	<div class="panel-body clearfix">
+        <div class="pull-right">
+            {{#bs-button type="warning" clicked="goToReport"}}Report{{/bs-button}}
+        </div>
+        <form id="dateRangeForm" role="form" class="form-inline">
+            <div class="form-group">
+                <label for="dateStart">Start Date: </label>
+                {{input type="date" class="form-control" id="dateStart" value=formDateStart}}
+            </div>
+            <div class="form-group">&nbsp;</div>
+            <div class="form-group">
+                <label for="dateEnd">End Date: </label>
+                {{input type="date" class="form-control" id="dateEnd" value=formDateEnd}}
+            </div>
+            <div class="form-group">&nbsp;</div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-success" {{action filterResults}}>Apply</button>
+            </div>
+        </form>
+	</div>
+	<div class="table-responsive">
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Date</th>
+					<th>Duration (hs)</th>
+					<th>Notes</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+            {{#unless count}}
+                <tr class="warning">
+                    <td colspan="5">
+                        <h4 class="text-center">You have no Worklogs yet, but you can create some by using the blue form below!</h4>
+                    </td>
+                </tr>
+            {{/unless}}
+			{{#each}}
+                {{#if newDate}}
+                    <tr class="warning">
+                        <td colspan="5">
+                            <p>{{formattedDate}}</p>
+                        </td>
+                    </tr>
+                {{/if}}
+				<tr {{bind-attr class="isEditing:warning extraHour:danger:success"}}>
+					<td>
+						{{id}}
+					</td>
+					<td>
+						{{#if isEditing}}
+							<label class="sr-only" for="edit-worklog-date">Date</label>
+							{{input type="date" id="edit-worklog-date" class="form-control" placeholder="" value=dateInputBuffer}}
+						{{else}}
+							{{formattedDate}}
+						{{/if}}
+					</td>
+					<td>
+						{{#if isEditing}}
+							<label class="sr-only" for="new-worklog-duration">Duration (in hours)</label>
+							{{input type="number" min="0" id="edit-worklog-duration" class="form-control" placeholder="Duration (hs)" value=duration}}
+						{{else}}
+							{{duration}}
+						{{/if}}
+					</td>
+					<td>
+						{{#if isEditing}}
+							{{textarea class="form-control" placeholder="Notes" value=notes}}
+						{{else}}
+							<p>{{notes}}</p>
+						{{/if}}
+					</td>
+					<td>
+						{{#if isEditing}}
+							<button title="Save" class="btn btn-xs btn-success" type="button" data-toggle="tooltip" {{action 'toggleEdit'}} >
+								<span class="glyphicon glyphicon-ok"></span>
+							</button>
+							<button title="Cancel" class="btn btn-xs btn-warning" type="button" data-toggle="tooltip" {{action 'cancelEdit'}}>
+								<span>Cancel</span>
+							</button>
+						{{else}}
+							<button title="Delete" type="button" data-toggle="tooltip" class="btn btn-danger btn-xs" {{action 'deleteWorklog'}} >
+								<span class="glyphicon glyphicon-remove"></span>
+							</button>
+							<button title="Edit" class="btn btn-xs btn-warning" type="button" data-toggle="tooltip" {{action 'toggleEdit'}}>
+								<span class="glyphicon glyphicon-pencil"></span>
+							</button>
+						{{/if}}
+					</td>
+				</tr>
+			{{/each}}
+			</tbody>
+			<tfoot class="panel-footer">
+				<tr>
+					<td>Items: <span class="badge">{{count}}</span></td>
+					<td class="text-right">Total hours:</td>
+					<td><strong><span class="badge">{{durationTotal}}</span></strong></td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
+</section>
+<hr/>
+<section class="col-lg-8 col-lg-offset-2">
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h5 class="panel-title">Create Worklog</h5>
+        </div>
+        <div class="panel-body">
+            <form class="form-inline" role="form">
+                <div class="form-group">
+                    <label class="sr-only" for="new-worklog-date">Date</label>
+                    {{input type="date" id="new-worklog-date" class="form-control" placeholder="" value=newDate}}
+                </div>
+                <div class="form-group">&nbsp;</div>
+                <div class="form-group">
+                    <label class="sr-only" for="new-worklog-duration">Duration (in hours)</label>
+                    {{input type="number" min="0" id="new-worklog-duration" class="form-control" placeholder="Duration (hs)" value=newDuration}}
+                </div>
+                <div class="form-group">&nbsp;</div>
+                <div class="form-group">
+                    <label class="sr-only" for="new-worklog-notes">Notes</label>
+                    {{textarea id="new-worklog-notes" class="form-control" placeholder="Notes" value=newNotes}}
+                </div>
+                <div class="form-group">&nbsp;</div>
+                <button type="submit" class="btn btn-default" {{action 'createWorklog'}}>Create</button>
+            </form>
+        </div>
+    </div>
+</section>

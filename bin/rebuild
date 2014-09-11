@@ -1,0 +1,65 @@
+#!/bin/bash
+cd ${0%/*}/..
+
+if [[ ! -f "config/autoload/local.php" ]]
+then
+    echo "---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~--"
+    echo "The application needs local configuration."
+    echo "  1. Create an empty database"
+    echo "  2. cd config/autoload"
+    echo "  3. cp local.php.dist local.php"
+    echo "  4. Edit local.php with database credentials"
+    echo "  5. Run rebuild script again: ./bin/rebuild"
+    echo "---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~--"
+    exit 1;
+fi
+
+echo "---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~--"
+read -p " Rebuild entities? [Y/n]" -n 1 -r
+echo
+
+if [[ $REPLY = ^[Y]$ ]]
+then
+    rm -rf module/Db/src/Db/Entity;
+    ./vendor/bin/doctrine-module orm:generate-entities module/Db/src;
+    echo "Entities have been rebuilt";
+fi
+
+    echo "---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~--"
+    read -p "Would you like to drop and re-create all database tables now? [Y/n]" -n 1 -r
+    echo
+
+    if [[ $REPLY = ^[Y]$ ]]
+    then
+        echo "---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~--"
+        echo "  Dropping existing db tables..."
+        echo "---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~--"
+        ./app drop
+
+        if [[ "$?" != "0" ]]
+        then
+            echo "Unable to drop database tables due to error. Unable to continue."
+            exit 1;
+        fi
+
+        echo "---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~--"
+        echo "  Tables dropped. Re-creating database schema..."
+        echo "---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~--"
+        ./vendor/bin/doctrine-module orm:schema-tool:create
+
+        if [[ "$?" != "0" ]]
+        then
+            echo "---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~--"
+            echo "Unable to re-create database schema. "
+            echo "  1. Make sure you're using the latest version of the app (git pull)."
+            echo "  2. Make sure you have all dependencies installed (composer install)."
+            echo "  3. Try manually dropping any leftover tables."
+            echo "---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~--"
+            exit 1;
+        fi
+
+        echo "---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~--"
+        echo "  Schema created."
+        echo "---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~--"
+
+fi

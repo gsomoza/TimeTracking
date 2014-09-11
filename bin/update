@@ -1,0 +1,102 @@
+#!/bin/bash
+cd ${0%/*}/..
+
+if [[ "$1" == "" ]]
+then
+	echo "---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~--~---~--"
+	read -p "Do you want to attempt an update of the application from the repository? [y/n]" -n 1 -r
+	echo
+else
+	export REPLY="y"
+fi
+
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+	echo "---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~--"
+	echo "  Pulling latest changes from remote repository ...";
+	echo "---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~--"
+	git pull
+
+	if [[ "$?" != "0" ]]
+	then
+		echo "Unable to pull changes from the repository. "
+		echo "  1. Make sure you have read access to the git repository."
+		echo "  2. Make sure you have connection to versions.soliantconsulting.com."
+		echo "  3. Try manually fetching changes with: git fetch"
+		echo "  4. Try stashing you local changes (git stash) and resetting local repo (git reset --hard)"
+		echo "  5. If everything else failed, try doing a clean clone in a new directory."
+		exit 1;
+	fi
+
+	echo "---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~--"
+	echo "  Installing dependencies..."
+	echo "---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~--"
+
+	if [ ! -f "./composer.phar" ]
+	then
+		# try invoking global installation of composer
+		composer --version
+
+		if [[ "$?" != "0" ]]
+		then
+			# Try installing the composer
+			echo "Composer not found - attempting to install from the web..."
+			curl -sS https://getcomposer.org/installer | php
+
+			if [[ "$?" != "0" ]]
+			then
+				echo "---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~--"
+				echo "Unable to install composer."
+				echo "   1. Try running composer from command line"
+				echo "   2. Delete your (possibly outdated) global installation of composer from /usr/bin"
+				echo "   3. Delete local ./composer.phar file"
+				echo "   4. Try installing composer manually: http://getcomposer.org/doc/00-intro.md"
+				echo "---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~--"
+				exit 1;
+			fi
+
+			if [ ! -f "./composer.phar" ]
+			then
+				echo "---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~--"
+				echo "Unable to install composer."
+				echo "   1. Try running composer from command line"
+				echo "   2. Delete your (possibly outdated) global installation of composer from /usr/bin"
+				echo "   3. Delete local ./composer.phar file"
+				echo "   4. Try installing composer manually: http://getcomposer.org/doc/00-intro.md"
+				echo "---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~--"
+				exit 1;
+			fi
+
+			echo "Using local composer.phar"
+			php ./composer.phar install --dev --prefer-dist
+		else
+			echo "Using global installation of composer."
+			composer install --dev --prefer-dist
+		fi
+	else
+		echo "Using local composer.phar"
+		php ./composer.phar install --dev --prefer-dist
+	fi
+
+	if [[ "$?" != "0" ]]
+	then
+		echo "---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~--"
+		echo "Unable to install dependencies."
+		echo "   1. Try deleting vendor directory: rm -Rf ./vendor"
+		echo "   2. Try installing manually: composer install --dev"
+		echo "---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~--"
+		exit 1;
+	fi
+
+	echo "---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~--"
+ 	echo "  Dependencies installed succesfully."
+ 	echo "  The application has been updated to the latest version."
+ 	echo "---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~--"
+ 	echo
+ 	echo
+ 	echo
+
+ 	./bin/rebuild
+else
+  echo Aborting...
+fi

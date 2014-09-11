@@ -1,0 +1,26 @@
+.caret-reversed{border-top-width: 0;border-bottom: 4px solid #000000;}
+
+/** Boostrap Components **/
+.notifications{
+    position: fixed;
+    z-index: 1000;
+    width:100%;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+}
+@media (max-width: 767px) {
+    .notifications{
+        position: relative;
+    }
+}
+
+/** worklogs **/
+.worklog .header-date a{color:#333;text-decoration:none;}
+
+body.print header.navbar{display:none !important}
+body.print footer{display:none !important}
+body.print .container{width:auto !important}
+

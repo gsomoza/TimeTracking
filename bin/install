@@ -1,0 +1,13 @@
+#!/bin/bash
+cd ${0%/*}/..
+
+if [[ -f "./vendor/autoload.php" || -d "./module/DbApi" ]]
+then
+    echo "---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~--"
+    echo " It seems that the application is already installed."
+    echo " Did you mean to run ./bin/update ?"
+    echo "---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~---~--"
+    exit 1
+fi
+
+./bin/update 1

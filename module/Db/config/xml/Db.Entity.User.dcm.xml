@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xsi="http://www.w3.org/2001/XMLSchema-instance" schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Db\Entity\User" table="oauth_users">
+    <id name="username" type="string" length="255"/>
+    <field name="password" type="string" length="2000" nullable="true"/>
+    <field name="firstName" column="first_name" type="string" length="255" nullable="true"/>
+    <field name="lastName" column="last_name" type="string" length="255" nullable="true"/>
+    <field name="dayLength" column="day_length" type="integer" nullable="true"/>
+    <one-to-many field="accessTokens" target-entity="Db\Entity\AccessToken" mapped-by="user"/>
+    <one-to-many field="authorizationCodes" target-entity="Db\Entity\AuthorizationCode" mapped-by="user"/>
+    <one-to-many field="refreshTokens" target-entity="Db\Entity\RefreshToken" mapped-by="user"/>
+    <one-to-many field="worklog" target-entity="Db\Entity\Worklog" mapped-by="user"/>
+  </entity>
+</doctrine-mapping>
