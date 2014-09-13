@@ -65,7 +65,8 @@ test("Partial submit: password", function() {
         andThen(function(){
             var alert = find('.alert.in');
             equal(alert.length, 1, 'One alert is shown.');
-            ok(alert.text().indexOf('Missing parameters') >= 0);
+            ok(alert.text().indexOf('Missing parameters') >= 0, 'Missing parameters message shown.');
+            equal(find('#password').val(), '', 'Password field is reset.');
         });
     });
 });

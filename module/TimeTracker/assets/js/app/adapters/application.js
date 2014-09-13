@@ -25,5 +25,3 @@ App.ApplicationAdapter = DS.RESTAdapter.extend({
         return this._super(jqXHR);
     }
 });
-
-App.ApplicationStore = DS.Store.extend({});

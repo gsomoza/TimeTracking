@@ -34,3 +34,5 @@ App.dateFormats = {
     form: 'YYYY-MM-DD',
     mysql: 'YYYY-MM-DD'
 };
+
+App.ApplicationStore = DS.Store.extend({});
