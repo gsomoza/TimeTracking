@@ -8,7 +8,7 @@ Some of the components / features:
 * Apigility
 * Ember.js
 * OAuth2 Password authentication
-* Boostrap
+* Bootstrap
 * Precompiles & minifies Ember templates and caches them to disk.
 
 ### INSTALLATION NOTES
