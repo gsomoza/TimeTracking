@@ -11,4 +11,39 @@
  * credentials from accidentally being committed into version control.
  */
 
-return array();
+return array(
+    'db' => array(
+        'adapters' => array(
+            'test' => array(
+                'driver' => 'Pdo_Mysql',
+                'database' => 'timetracker',
+                'username' => 'timetracket',
+                'password' => 'pentium',
+                'hostname' => 'localhost',
+            ),
+        ),
+    ),
+    'doctrine' => array(
+        'connection' => array(
+            'orm_default' => array(
+                'driverClass' => 'Doctrine\\DBAL\\Driver\\PDOMySql\\Driver',
+                'params' => array(
+                    'host' => 'localhost',
+                    'port' => '3306',
+                    'user' => 'timetracker',
+                    'password' => 'pentium',
+                    'dbname' => 'timetracker',
+                ),
+            ),
+        ),
+    ),
+    /*'zf-oauth2' => array(
+        'storage' => 'ZF\\OAuth2\\Adapter\\PdoAdapter',
+        'db' => array(
+            'dsn_type' => 'PDO',
+            'dsn' => 'mysql:host=localhost;database=timetracker',
+            'username' => 'timetracker',
+            'password' => 'pentium',
+        ),
+    ),*/
+);
